@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reports · Expense Tracker</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --card-radius: 16px;
+            --shadow-soft: 0 6px 18px rgba(0, 0, 0, .08);
+            --gradient-1: linear-gradient(135deg, #667eea, #764ba2);
+            --gradient-2: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            --gradient-3: linear-gradient(135deg, #43cea2, #185a9d);
+            --gradient-4: linear-gradient(135deg, #f7971e, #ffd200);
+        }
+
+        body {
+            background: linear-gradient(120deg, #fdfbfb, #ebedee);
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        .navbar {
+            background: var(--gradient-1);
+        }
+
+        .navbar .navbar-brand {
+            font-weight: 700;
+            color: #fff !important;
+        }
+
+        .navbar .pill {
+            background: rgba(255, 255, 255, .15);
+            color: #fff;
+            border: none;
+        }
+
+        .card {
+            background: #fff;
+            border: none;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-soft);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .12);
+        }
+
+        .card-header {
+            font-weight: 600;
+            border-bottom: none;
+            padding-bottom: .75rem;
+            background: transparent;
+        }
+
+        .badge-soft {
+            background: #e0e7ff;
+            color: #4338ca;
+            border: none;
+        }
+
+        .grid-2,
+        .grid-3 {
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+
+        .list-clean li {
+            border-bottom: 1px solid #e2e8f0;
+            padding: .5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-clean li:last-child {
+            border-bottom: none;
+        }
+
+        .pill {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: .25rem .75rem;
+            border-radius: 9999px;
+            font-size: .85rem;
+        }
+
+        /* Gradient backgrounds for special cards */
+        .gradient-card-1 {
+            background: var(--gradient-2);
+            color: #fff;
+        }
+
+        .gradient-card-2 {
+            background: var(--gradient-3);
+            color: #fff;
+        }
+
+        .gradient-card-3 {
+            background: var(--gradient-4);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand brand" th:href="@{/home}">Expense Tracker</a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="pill" th:text="'Hello,' + ${name}">Hello, User</span>
+
+                <a class="btn btn-sm btn-outline-light" th:href="@{/home}">Home Page</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+
+        <!-- Filters -->
+        <form class="card mb-4" th:action="@{/reports}" method="get">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Filters</span>
+                <span class="badge badge-soft rounded-pill" th:text="${currentRangeLabel}">This Month</span>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">From</label>
+                        <input type="date" class="form-control" name="from" th:value="${from}" />
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">To</label>
+                        <input type="date" class="form-control" name="to" th:value="${to}" />
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">View</label>
+                        <select class="form-select" name="granularity">
+                            <option th:value="monthly" th:selected="${granularity=='monthly'}">Monthly</option>
+                            <option th:value="yearly" th:selected="${granularity=='yearly'}">Yearly</option>
+                            <option th:value="daily" th:selected="${granularity=='daily'}">Daily</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category">
+                            <option value="" th:selected="${category==null or category==''}">All</option>
+                            <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"
+                                th:selected="${c == category}">Category</option>
+
+                        </select>
+                    </div>
+
+                    <!-- Optional: amount range -->
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Min Amount</label>
+                        <input type="number" step="0.01" class="form-control" name="min" th:value="${min}" />
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Max Amount</label>
+                        <input type="number" step="0.01" class="form-control" name="max" th:value="${max}" />
+                    </div>
+
+                    <div class="col-12 col-md-6 d-flex gap-2 justify-content-md-end">
+                        <button class="btn btn-primary" type="submit">Apply</button>
+                        <a class="btn btn-outline-secondary" th:href="@{/reports}">Reset</a>
+                        <a class="btn btn-outline-success" th:href="@{/download/pdf}">Download PDF</a>
+                        <a class="btn btn-outline-info" th:href="@{/download/excel}">Download Excel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Insight Cards -->
+        <section class="grid-3 mb-4">
+            <div class="card gradient-card-1">
+                <div class="card-header">Average Spend / Day</div>
+                <div class="card-body">
+                    <h3 class="mb-1" th:text="${avgPerDay}">₹500</h3>
+                    <small>Based on selected range</small>
+                </div>
+            </div>
+            <div class="card gradient-card-2">
+                <div class="card-header">Month vs Last Month</div>
+                <div class="card-body">
+                    <h3 class="mb-1">
+                        <span th:text="${monthChangePercent}">+20%</span>
+                    </h3>
+                    <small
+                        th:text="${monthChangePercentNumeric != null and monthChangePercentNumeric >= 0 ? 'Higher than last month' : 'Lower than last month'}">
+                        Higher than last month
+                    </small>
+                </div>
+            </div>
+            <div class="card gradient-card-3">
+                <div class="card-header">Peak Spending Day</div>
+                <div class="card-body">
+                    <h3 class="mb-1" th:text="${peakDay}">Saturday</h3>
+                    <small th:text="${peakDayAmount}">₹2,300</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts -->
+        <section class="grid-2 mb-4">
+            <!-- Category-wise Bar -->
+            <div class="card">
+                <div class="card-header">Category-wise Spending (Bar)</div>
+                <div class="card-body">
+                    <canvas id="barCategory"></canvas>
+                </div>
+            </div>
+
+            <!-- Daily Trend Line -->
+            <div class="card">
+                <div class="card-header">Daily Spending Trend</div>
+                <div class="card-body">
+                    <canvas id="lineDaily"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top 5 Categories -->
+        <section class="card mb-5">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Top 5 Expense Categories</span>
+                <span class="pill" th:text="${totalInRange}">Total: ₹0</span>
+            </div>
+            <div class="card-body">
+                <ul class="list-clean">
+                    <li th:each="row : ${top5}">
+                        <span>
+                            <span class="pill me-2">#<span th:text="${row.rank}">1</span></span>
+                            <strong th:text="${row.category}">Groceries</strong>
+                        </span>
+                        <span>
+                            <span th:text="${row.amount}">₹0</span>
+                            <small class="text-secondary ms-2" th:text="${row.percent} + '%'">40%</small>
+                        </span>
+                    </li>
+                    <li th:if="${#lists.isEmpty(top5)}" class="text-secondary">No data in selected range.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JS libs -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Charts Script (Thymeleaf inline) -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const catLabels = /*[[${chartCategoryLabels}]]*/["Food", "Travel", "Shopping", "Others"];
+        const catValues = /*[[${chartCategoryData}]]*/[3500, 2400, 1800, 700];
+
+        const dailyLabels = /*[[${dailyTrendLabels}]]*/["01", "02", "03", "04", "05", "06", "07"];
+        const dailyValues = /*[[${dailyTrendData}]]*/[200, 450, 0, 1200, 300, 90, 600];
+
+        // Category Bar Chart
+        (() => {
+            const ctxBar = document.getElementById('barCategory');
+            if (!ctxBar) return;
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: catLabels,
+                    datasets: [{
+                        label: 'Amount (₹)',
+                        data: catValues,
+                        backgroundColor: ['#667eea', '#ff9a9e', '#43cea2', '#f7971e', '#36a2eb']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, ticks: { callback: v => '₹' + v } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: c => '₹' + c.parsed.y } }
+                    }
+                }
+            });
+        })();
+
+        // Daily Line Chart
+        (() => {
+            const ctxLine = document.getElementById('lineDaily');
+            if (!ctxLine) return;
+            new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: dailyLabels,
+                    datasets: [{
+                        label: 'Daily Spend (₹)',
+                        data: dailyValues,
+                        tension: .3,
+                        fill: true,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, ticks: { callback: v => '₹' + v } }
+                    }
+                }
+            });
+        })();
+        /*]]>*/
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create Account - Personal Expence Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        /* Reset and base */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: #5a5870;
+            color: #f9f9f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://static.vecteezy.com/system/resources/thumbnails/001/060/223/small_2x/rocket-is-flying-in-galaxy-space-of-the-universe.jpg');
+        }
+
+        /* Container for the card */
+        .container {
+            display: flex;
+            background: #27232f;
+            border-radius: 16px;
+            box-shadow:
+                0 12px 24px rgb(0 0 0 / 0.25),
+                inset 0 0 0 1px rgb(255 255 255 / 0.04);
+            width: 900px;
+            max-width: 90vw;
+            min-height: 530px;
+            overflow: hidden;
+        }
+
+        /* LEFT SIDE - image & slogan */
+        .left-side {
+            flex: 1;
+            position: relative;
+            background: #382f5a;
+            border-radius: 16px 0 0 16px;
+            box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 25px 28px 28px 28px;
+        }
+
+        /* Logo top left */
+        .logo {
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: white;
+            font-style: italic;
+            letter-spacing: 2px;
+            user-select: none;
+            cursor: default;
+            width: fit-content;
+            filter: drop-shadow(0 0 2px rgba(255 255 255 / 0.25));
+            z-index: 3;
+        }
+
+        .top-left {
+            position: absolute;
+            top: 28px;
+            left: 28px;
+            user-select: none;
+        }
+
+        /* Back to website button top right */
+        .back-website {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            background: rgba(255 255 255 / 0.1);
+            border-radius: 14px;
+            padding: 4px 14px;
+            font-size: 0.825rem;
+            color: #ccc;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 3px rgb(0 0 0 / 0.15);
+            backdrop-filter: blur(7px);
+            user-select: none;
+            text-decoration: none;
+        }
+
+        .back-website:hover {
+            background: #7269b6;
+            color: white;
+        }
+
+        .back-website svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transform: translateX(-1px);
+        }
+
+        /* Image container inside left */
+        .left-image-container {
+            max-height: 380px;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 30px 25px #4e4b6a;
+            filter: drop-shadow(0 0 20px #5e4fc7cc);
+            user-select: none;
+        }
+
+        .left-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            user-select: none;
+        }
+
+        /* Text below image */
+        .left-text {
+            margin-top: 18px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            line-height: 1.4;
+            color: #e4e3f2;
+            user-select: none;
+            text-shadow: 0 0 7px rgb(112 96 223 / 0.75);
+        }
+
+        /* Pagination indicators below text */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+            user-select: none;
+        }
+
+        .pag-item {
+            height: 6px;
+            width: 24px;
+            border-radius: 3px;
+            background-color: rgba(255 255 255 / 0.14);
+            box-shadow: inset 0 0 2px rgba(0 0 0 / 0.3);
+            cursor: pointer;
+            transition: background-color 0.25s ease;
+        }
+
+        .pag-item.active {
+            background-color: white;
+            box-shadow: none;
+        }
+
+        /* RIGHT SIDE - form */
+        .right-side {
+            flex: 1;
+            padding: 40px 48px 48px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #833AB4;
+            background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 84%, rgba(252, 176, 69, 1) 100%);
+        }
+
+        .right-side h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .right-side p.sub-info {
+            font-size: 0.85rem;
+            margin-bottom: 28px;
+            color: #bbb;
+        }
+
+        .right-side p.sub-info a {
+            color: #847adb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .right-side p.sub-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Form grid for first and last name */
+        form .name-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        /* Input styling */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            background: #393448;
+            border: 1px solid #6a6780;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 1rem;
+            color: #ddd;
+            transition: border-color 0.25s ease;
+            outline-offset: 2px;
+            width: 100%;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #847adb;
+            background: #4e4b6a;
+            color: white;
+        }
+
+        input::placeholder {
+            color: #837fa2;
+        }
+
+        input[disabled] {
+            background: #3a3749;
+            border-color: #504e60;
+            cursor: not-allowed;
+        }
+
+        /* Password container for show/hide button */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input[type="password"],
+        .password-container input[type="text"] {
+            padding-right: 40px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #837fa2;
+            font-size: 18px;
+            padding: 0;
+            user-select: none;
+            transition: color 0.3s ease;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle:hover {
+            color: #c0bff4;
+        }
+
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        /* Checkbox container and label */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            font-size: 0.85rem;
+            color: #d4d2e3;
+            user-select: none;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            background: #393448;
+            border: 2px solid #6a6780;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            appearance: none;
+            position: relative;
+            display: inline-block;
+        }
+
+        .checkbox-container input[type="checkbox"]:checked {
+            background: #847adb;
+            border-color: #847adb;
+        }
+
+        .checkbox-container input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 4px;
+            height: 9px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-container a {
+            color: #847adb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .checkbox-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit button */
+        button.submit-btn {
+            background: #7b69d9;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.28s ease;
+            box-shadow: 0 4px 8px rgb(123 105 217 / 0.68);
+            user-select: none;
+        }
+
+        button.submit-btn:hover:not(:disabled) {
+            background: #a08cee;
+            box-shadow: 0 6px 12px rgb(160 140 238 / 0.8);
+        }
+
+        button.submit-btn:disabled {
+            background: #524d62;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Divider section */
+        .divider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 28px 0 28px 0;
+            font-size: 0.85rem;
+            color: #837fa2;
+            user-select: none;
+        }
+
+        .divider-container .line {
+            flex-grow: 1;
+            height: 1px;
+            background: #504e60;
+            border-radius: 1px;
+        }
+
+        /* Social buttons container */
+        .social-btns {
+            display: flex;
+            gap: 18px;
+        }
+
+        button.social-button {
+            outline: none;
+            border: 1.5px solid rgba(255 255 255 / 0.22);
+            background: transparent;
+            border-radius: 8px;
+            color: #e6e6e6;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 29px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+            user-select: none;
+            flex: 1;
+            justify-content: center;
+            box-shadow: inset 0 0 1px 0 rgb(0 0 0 / 0.15);
+        }
+
+        button.social-button:hover {
+            background: rgba(255 255 255 / 0.12);
+            border-color: #9b98be;
+        }
+
+        button.social-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            stroke: none;
+        }
+
+        /* Google icon override white fill */
+        button.google svg path {
+            fill: white;
+        }
+
+        /* Apple icon as solid white */
+        button.apple svg path {
+            fill: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 690px) {
+            .container {
+                flex-direction: column;
+                border-radius: 14px;
+                width: 90vw;
+                min-height: auto;
+            }
+
+            .left-side {
+                border-radius: 16px 16px 0 0;
+                max-height: 280px;
+                padding: 18px 22px 22px 22px;
+            }
+
+            .left-image-container {
+                max-height: 220px;
+            }
+
+            .right-side {
+                padding: 32px 30px 30px 30px;
+            }
+
+            form .name-fields {
+                grid-template-columns: 1fr;
+            }
+
+            button.social-button {
+                padding: 10px 20px;
+                font-size: 0.925rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" role="main" aria-label="Create account form container">
+        <section class="left-side" aria-label="Visual and brand panel">
+            <div class="top-left" aria-hidden="true">
+                <div class="logo" aria-label="AMU logo, brand name">Personal Expence Tracker</div>
+            </div>
+
+            <div
+                style="flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end; margin-top: 10px;">
+                <div class="left-image-container">
+                    <img src="https://i.pinimg.com/736x/ab/8e/dc/ab8edc9078faaaa5d97e709ce22ebb3d.jpg"
+                        alt="A purple-hued desert landscape with sand dunes under a twilight sky, evoking calm and inspiration."
+                        onerror="this.onerror=null;this.src='https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/56339bd0-1ae9-41c0-a08c-d9ea605a09d1.png';" />
+                </div>
+                <div class="left-text">Track Expences,<br>Make Future Brighter</div>
+                <div class="pagination" aria-label="Pagination slides indicator">
+                    <div class="pag-item"></div>
+                    <div class="pag-item"></div>
+                    <div class="pag-item active"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="right-side" aria-label="Create an account form section">
+            <h1>Login Your Account</h1>
+            <p class="sub-info">
+                Don't have an account? <a th:href="@{/register}" >register</a>
+            </p>
+            <form th:action="@{/login}"  method="post" id="registration-form">
+                
+                <input type="email" name="email"  id="email"  placeholder="Enter Your E-Mail" ... />
+                <div class="password-container" style="margin-top: 18px;">
+                    <input type="password" id="password" name="password" placeholder="Enter your password"
+                        aria-label="Password" required autocomplete="new-password" />
+                    <button type="button" class="password-toggle" aria-label="Show or hide password" tabindex="0">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" id="eye-icon">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+
+                <label class="checkbox-container" for="terms">
+                    <input type="checkbox" id="terms" name="terms" required aria-required="true" />
+                    I agree to the <a href="#" tabindex="0">Terms & Conditions</a>
+                </label>
+
+                <button type="submit" class="submit-btn" id="submit-btn">Sign - In</button>
+            </form>
+            <div class="divider-container" aria-hidden="true">
+                <div class="line"></div>
+                <span>Or register with</span>
+                <div class="line"></div>
+            </div>
+            <div class="social-btns">
+                <button class="social-button google" aria-label="Continue registration with Google">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path
+                            d="M21.805 10.023h-9.525v3.945h5.774c-.25 1.444-1.829 4.239-5.774 4.239-3.478 0-6.312-2.881-6.312-6.437 0-3.556 2.834-6.438 6.312-6.438 1.979 0 3.305.842 4.07 1.569l2.774-2.676C17.799 5.998 15.04 5 12.28 5 6.807 5 2.387 9.877 2.387 15.51c0 5.633 4.42 10.511 9.893 10.511 5.695 0 9.536-3.988 9.536-9.603 0-.63-.063-1.091-.011-1.895z">
+                        </path>
+                    </svg>
+                    Google
+                </button>
+                <button class="social-button apple" aria-label="Continue registration with Apple">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path
+                            d="M16.365 1.43c-1.112.053-2.448.737-3.224 1.695-.7.86-1.31 2.21-1.083 3.514 1.196.103 2.43-.705 3.19-1.601.695-.814 1.184-2.152 1.117-3.608zM20.504 7.421c-1.948-.258-3.782 1.093-4.75 1.093-.999 0-2.55-1.054-4.213-1.028-2.159.017-4.19 1.25-5.309 3.154-2.273 3.94-.581 9.773 1.63 12.967 1.078 1.527 2.358 3.379 4.04 3.294 1.63-.084 2.242-1.052 4.207-1.052 1.945 0 2.515 1.052 4.217 1.02 1.748-.032 2.854-1.543 3.9-3.148 1.235-1.847 1.745-3.63 1.77-3.726-.042-.02-3.372-1.29-3.413-5.122-.042-3.698 3.014-5.243 3.162-5.33-1.737-2.536-4.43-2.75-5.36-2.785z">
+                        </path>
+                    </svg>
+                    Apple
+                </button>
+            </div>
+        </section>
+    </div>
+
+
+</body>
+
+</html>
