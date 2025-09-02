@@ -91,27 +91,30 @@ Smart-Expense-Manager/
 ## 📸 Screenshots
 
 
-- 🏠 Home Page  
-  ![Home Page 1](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/HomePage_1.png)  
-  ![Home Page 2](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/HomePage_2.png)
+- 🔑 Register Page 
+  ![Register](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/Register_Page.png)  
+ 
 
 - 🔐 Login Page  
-  ![Login Page](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/Login_Page.png)
+  ![Login Page](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/Login_Page.png)
 
-- 🛒 Cart Page  
-  ![Cart Page](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/Cart_Page.png)
+- 🏠 Home Page 
+  ![HomePage](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/DashBoard_Page.png)
 
-- 📋 Add Book Form  
-  ![Add Book Page](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/Add_New_Book_Page.png)
+- 📋 Add New Transaction  
+  ![Add New Transaction](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/Add_New_Transactiion_Page.png)
 
-- 📤 Update Book Form  
-  ![Update Book Page](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/Update_BookPage.png)
+- 📤 Transaction List 
+  ![Transaction List](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/Add_New_Transactiion_Page.png)
 
-- 🗑️ Delete Book  
-  ![Delete Book Page](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/Delete_A_Book_Page.png)
+- 📑 Reports  
+  ![Reports](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/Reports_Page.png)
 
-- New Login Page
-- ![New Login Page](https://github.com/ankitdoi-coder/Book-Store-Web-Application-Full-Stack-Java/blob/main/Deployment%20ScreenShot/Updated_Login_page.jpg)
+- Category
+- ![Category page](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/Category_Page.png)
+
+- Profile
+- ![Profile Page](https://github.com/ankitdoi-coder/Smart-Expense-Manager-Full-Stack-Java/blob/main/Expense%20Tracker%20Web%20App%20Preview/Profile_Page.png)
 ---
 
 # 🛠️ Installation & Setup
